@@ -1,0 +1,13 @@
+# Internal address for the backend, so frontend and Ingress can reach it as "backend-service".
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: saas-app
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP

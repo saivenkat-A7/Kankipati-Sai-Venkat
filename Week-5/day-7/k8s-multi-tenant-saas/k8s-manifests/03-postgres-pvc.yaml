@@ -1,0 +1,12 @@
+# PVC = a request for permanent disk space, so DB data survives Pod restarts.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: saas-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

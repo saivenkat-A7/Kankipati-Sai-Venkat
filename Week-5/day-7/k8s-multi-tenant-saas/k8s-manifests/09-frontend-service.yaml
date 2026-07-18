@@ -1,0 +1,15 @@
+# NodePort exposes the frontend outside the cluster on every node's IP at port 30080.
+# In Day 4 we replace/complement this with Ingress for cleaner URL-based routing.
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: saas-app
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
+  type: NodePort

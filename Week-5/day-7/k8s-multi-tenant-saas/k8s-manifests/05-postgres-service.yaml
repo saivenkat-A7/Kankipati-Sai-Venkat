@@ -1,0 +1,14 @@
+# Service = a stable internal address for Postgres, so the backend can always find it
+# by the name "postgres-service" even if the Pod restarts and gets a new IP.
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: saas-app
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

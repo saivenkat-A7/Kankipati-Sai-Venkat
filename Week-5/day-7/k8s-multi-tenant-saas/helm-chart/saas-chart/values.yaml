@@ -1,0 +1,36 @@
+# This file is the "control panel" for the whole chart.
+# Change values here instead of editing template files directly.
+
+namespace: saas-app
+
+frontend:
+  image: YOUR_DOCKERHUB_USERNAME/saas-frontend
+  tag: v1
+  replicas: 3
+  port: 80
+  service:
+    type: NodePort
+    nodePort: 30080
+
+backend:
+  image: YOUR_DOCKERHUB_USERNAME/saas-backend
+  tag: v1
+  replicas: 3
+  port: 5000
+  service:
+    type: ClusterIP
+
+postgres:
+  image: postgres
+  tag: "15"
+  storage: 1Gi
+  dbName: saas_db
+
+secrets:
+  dbUser: saas_user
+  dbPassword: saas_pass123
+  jwtSecret: supersecretkey
+
+ingress:
+  enabled: true
+  host: saas.local

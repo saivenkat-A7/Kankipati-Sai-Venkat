@@ -1,0 +1,65 @@
+# Backend Deployment: runs your API server. 3 copies (replicas) = high availability.
+# >>> EDIT the "image:" line below to your actual backend image from Docker Hub / GHCR <<<
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: saas-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  strategy:
+    type: RollingUpdate      # updates Pods one-by-one, zero downtime
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: YOUR_DOCKERHUB_USERNAME/saas-backend:v1   # <-- CHANGE THIS
+          ports:
+            - containerPort: 5000    # <-- change if your backend uses a different port
+          envFrom:
+            - configMapRef:
+                name: saas-config
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: saas-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: saas-secret
+                  key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: saas-secret
+                  key: JWT_SECRET
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          readinessProbe:          # "Is the app ready to accept traffic?"
+            httpGet:
+              path: /health         # <-- change to your real health-check route
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:           # "Is the app still alive, or should it be restarted?"
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20

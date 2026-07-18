@@ -1,0 +1,22 @@
+# Network Policy = a firewall rule inside the cluster.
+# This says: "Only Pods labeled app=backend are allowed to talk to Postgres."
+# Frontend and anything else is blocked from reaching the database directly.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-allow-backend-only
+  namespace: saas-app
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: backend
+      ports:
+        - protocol: TCP
+          port: 5432

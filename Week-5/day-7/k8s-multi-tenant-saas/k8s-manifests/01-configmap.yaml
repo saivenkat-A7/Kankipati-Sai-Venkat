@@ -1,0 +1,14 @@
+# ConfigMap = a box of NON-secret settings (safe to see in plain text).
+# These become environment variables inside the backend Pod.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: saas-config
+  namespace: saas-app
+data:
+  DB_HOST: "postgres-service"      # matches the postgres Service name below
+  DB_PORT: "5432"
+  DB_NAME: "saas_db"
+  APP_ENV: "production"
+  MULTI_TENANT_MODE: "schema"      # change to "row" or "database" if that's how your app separates tenants
+  BACKEND_PORT: "5000"             # change to whatever port your backend listens on

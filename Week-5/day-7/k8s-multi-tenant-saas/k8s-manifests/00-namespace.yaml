@@ -1,0 +1,6 @@
+# This creates an isolated "room" inside the cluster called saas-app.
+# Everything for this project lives inside this room.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: saas-app
